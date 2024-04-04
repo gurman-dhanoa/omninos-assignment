@@ -6,18 +6,11 @@ const cloudinary = require("cloudinary");
 
 // Create new user
 exports.registerUser = catchAsyncError(async (req, res, next) => {
-  const { name, email, password, contactNumber } = req.body;
-//   const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
-//     folder: "images",
-//     width: 150,
-//     crop: "scale",
-//   });
+  const { name, email, password } = req.body;
   const user = await User.create({
     name,
     email,
-    password,
-    contactNumber,
-    // image: { public_id: myCloud.public_id, url: myCloud.secure_url },
+    password
   });
   sendUserToken(user, 201, res);
 });

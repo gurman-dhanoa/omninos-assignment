@@ -19,22 +19,7 @@ const userSchema = mongoose.Schema({
   password: {
     type: String,
     required: [true, "Password is required"],
-  },
-  contactNumber: {
-    type: Number,
-    maxLength: [10, "Contact number can have max 10 character"],
-    required: [true, "Please enter your contact number"],
-  },
-  // image: {
-  //   public_id: {
-  //     type: String,
-  //     required: true,
-  //   },
-  //   url: {
-  //     type: String,
-  //     required: true,
-  //   },
-  // },
+  }
 });
 
 userSchema.pre("save", async function (next) {

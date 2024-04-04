@@ -26,14 +26,14 @@ exports.addItemToCart = catchAsyncError(async (req, res) => {
       totalPrice: quantity * price,
     });
     await newItem.save();
-    return res.status(201).json({ message: "Item added to cart successfully" });
+    return res.status(201).json({status:200, message: "Item added to cart successfully" });
   }
 });
 
 exports.removeItemFromCart = catchAsyncError(async (req, res) => {
   const { itemId } = req.params;
 
-  await CartItem.findByIdAndDelete(itemId);
+  await CartItem.deleteOne({ _id: itemId });
 
   return res
     .status(200)
@@ -45,5 +45,5 @@ exports.getCartItems = catchAsyncError(async (req, res) => {
 
   const cartItems = await CartItem.find({ user: userId }).populate("product");
 
-  return res.status(200).json(cartItems);
+  return res.status(200).json({cart:cartItems});
 });

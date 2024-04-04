@@ -1,15 +1,20 @@
 const catchAsyncError = require("../middleware/catchAsyncError");
 const Product = require("../model/product.model");
+const cloudinary = require("cloudinary")
 
 exports.createProduct = catchAsyncError(async (req, res) => {
-  const { name, description, price, imageUrl } = req.body;
-
+  const { name, description, price } = req.body;
+  const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
+    folder: "images",
+    width: 300,
+    crop: "scale",
+  });
   const newProduct = new Product({
     name,
     description,
     price,
     user:req.user._id,
-    // imageUrl,
+    image: { public_id: myCloud.public_id, url: myCloud.secure_url },
   });
 
   await newProduct.save();
@@ -22,7 +27,7 @@ exports.createProduct = catchAsyncError(async (req, res) => {
 exports.getUserProducts = async (req, res) => {
   try {
     const products = await Product.find({user:req.user._id});
-    return res.status(200).json(products);
+    return res.status(200).json({products:products});
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -32,7 +37,7 @@ exports.getUserProducts = async (req, res) => {
 exports.getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
-    return res.status(200).json(products);
+    return res.status(200).json({products:products});
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
